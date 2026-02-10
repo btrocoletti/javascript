@@ -1,0 +1,152 @@
+/* style.css - requerido por la entrega */
+
+:root{
+  --bg: #0b1220;
+  --card: #0f1a33;
+  --text: #e9eefc;
+  --muted: rgba(233,238,252,.75);
+  --border: rgba(233,238,252,.12);
+  --shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+
+body{
+  background: linear-gradient(180deg, var(--bg) 0%, #060a14 100%);
+  color: var(--text);
+}
+
+.app-header{
+  padding: 28px 0 18px;
+  border-bottom: 1px solid var(--border);
+  background: radial-gradient(1000px 300px at 10% 0%, rgba(13,110,253,.25), transparent 60%),
+              radial-gradient(900px 280px at 90% 0%, rgba(32,201,151,.18), transparent 60%);
+}
+
+.app-title{
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: .3px;
+}
+
+.app-subtitle{
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.section-title{
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.section-hint{
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.form-filtro{
+  width: 260px;
+}
+
+.card.producto-card{
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  height: 100%;
+}
+
+.producto-card .card-body{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.producto-card .card-img-top{
+  height: 190px;
+  object-fit: contain;
+  background: rgba(255,255,255,.02);
+  padding: 10px;
+}
+
+.producto-meta{
+  color: var(--muted);
+  font-size: .92rem;
+}
+
+.producto-precio{
+  font-weight: 800;
+}
+
+.producto-form{
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.producto-form .form-control{
+  width: 120px;
+}
+
+.carrito-section{
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255,255,255,.03);
+  box-shadow: var(--shadow);
+}
+
+.carrito-lista{
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 14px;
+}
+
+.carrito-item{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.carrito-item:last-child{
+  border-bottom: none;
+}
+
+.carrito-item .info{
+  min-width: 220px;
+}
+
+.carrito-item .info .nombre{
+  font-weight: 800;
+}
+
+.carrito-item .info .detalle{
+  color: var(--muted);
+  font-size: .92rem;
+}
+
+.carrito-item .acciones{
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.carrito-form{
+  margin-top: 6px;
+}
+
+.carrito-msg{
+  color: var(--muted);
+}
+
+.app-footer{
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
