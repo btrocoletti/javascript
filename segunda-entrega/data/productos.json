@@ -1,0 +1,99 @@
+[
+  {
+    "name": "Antipulgas Gato",
+    "id": "001",
+    "type": "Medicinal",
+    "price": 450,
+    "stock": 32,
+    "description": "Antipulgas felino Frontline Plus"
+  },
+  {
+    "name": "Antipulgas Perro",
+    "id": "002",
+    "type": "Medicinal",
+    "price": 480,
+    "stock": 25,
+    "description": "Antipulgas canino Frontline Plus"
+  },
+  {
+    "name": "Antiparasitario",
+    "id": "003",
+    "type": "Medicinal",
+    "price": 370,
+    "stock": 15,
+    "description": "Antiparasitario interno Oral Paraqueños"
+  },
+  {
+    "name": "Alimento Gato Joven",
+    "id": "004",
+    "type": "Alimento",
+    "price": 4530,
+    "stock": 18,
+    "description": "Alimento para gatos Kitten de Royal Canin"
+  },
+  {
+    "name": "Alimento Gato Adulto",
+    "id": "005",
+    "type": "Alimento",
+    "price": 5050,
+    "stock": 22,
+    "description": "Alimento para gatos Adulto de Royal Canin"
+  },
+  {
+    "name": "Alimento Gato Edad Avanzada",
+    "id": "006",
+    "type": "Alimento",
+    "price": 5350,
+    "stock": 14,
+    "description": "Alimento para gatos Senior de Royal Canin"
+  },
+  {
+    "name": "Alimento Perro Joven",
+    "id": "007",
+    "type": "Alimento",
+    "price": 6100,
+    "stock": 11,
+    "description": "Alimento para perros Puppy de Royal Canin"
+  },
+  {
+    "name": "Alimento Perro Adulto",
+    "id": "008",
+    "type": "Alimento",
+    "price": 6800,
+    "stock": 20,
+    "description": "Alimento para perros Adulto de Royal Canin"
+  },
+  {
+    "name": "Alimento Perro Edad Avanzada",
+    "id": "009",
+    "type": "Alimento",
+    "price": 7200,
+    "stock": 9,
+    "description": "Alimento para perros Senior de Royal Canin"
+  },
+  {
+    "name": "Juguete de Ratón",
+    "id": "010",
+    "type": "Juguete",
+    "price": 300,
+    "stock": 40,
+    "description": "Juguete de ratón con catnip"
+  },
+  {
+    "name": "Hueso Comestible",
+    "id": "011",
+    "type": "Juguete",
+    "price": 520,
+    "stock": 30,
+    "description": "Hueso comestible para perros"
+  },
+  {
+    "name": "Pelota",
+    "id": "012",
+    "type": "Juguete",
+    "price": 210,
+    "stock": 9,
+    "description": "Pelota plástica hipoalergénica chillona (12 cm)"
+  }
+]
+ 

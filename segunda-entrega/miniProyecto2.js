@@ -9,22 +9,6 @@ class Producto {
   }
 }
 
-// Array de productos base
-const productosBase = [
-  { name: "Antipulgas Gato", id: "001", type: "Medicinal", price: 450, stock: 32, description: "Antipulgas felino Frontline Plus" },
-  { name: "Antipulgas Perro", id: "002", type: "Medicinal", price: 480, stock: 25, description: "Antipulgas canino Frontline Plus" },
-  { name: "Antiparasitario", id: "003", type: "Medicinal", price: 370, stock: 15, description: "Antiparasitario interno Oral Paraqueños" },
-  { name: "Alimento Gato Joven", id: "004", type: "Alimento", price: 4530, stock: 18, description: "Alimento para gatos Kitten de Royal Canin" },
-  { name: "Alimento Gato Adulto", id: "005", type: "Alimento", price: 5050, stock: 22, description: "Alimento para gatos Adulto de Royal Canin" },
-  { name: "Alimento Gato Edad Avanzada", id: "006", type: "Alimento", price: 5350, stock: 14, description: "Alimento para gatos Senior de Royal Canin" },
-  { name: "Alimento Perro Joven", id: "007", type: "Alimento", price: 6100, stock: 11, description: "Alimento para perros Puppy de Royal Canin" },
-  { name: "Alimento Perro Adulto", id: "008", type: "Alimento", price: 6800, stock: 20, description: "Alimento para perros Adulto de Royal Canin" },
-  { name: "Alimento Perro Edad Avanzada", id: "009", type: "Alimento", price: 7200, stock: 9, description: "Alimento para perros Senior de Royal Canin" },
-  { name: "Juguete de Ratón", id: "010", type: "Juguete", price: 300, stock: 40, description: "Juguete de ratón con catnip" },
-  { name: "Hueso Comestible", id: "011", type: "Juguete", price: 520, stock: 30, description: "Hueso comestible para perros" },
-  { name: "Pelota", id: "012", type: "Juguete", price: 210, stock: 9, description: "Pelota plástica hipoalergénica chillona (12 cm)" },
-];
-
 // storage
 function guardarEnStorage(clave, valor) {
   localStorage.setItem(clave, JSON.stringify(valor));
@@ -34,28 +18,21 @@ function cargarDeStorage(clave, valorPorDefecto) {
   return JSON.parse(localStorage.getItem(clave)) || valorPorDefecto;
 }
 
-// Estado de poro
-let productos = cargarDeStorage("productos", []);
+// estado
+let productos = [];
 let carrito = cargarDeStorage("carrito", []);
 let pedidos = cargarDeStorage("pedidos", []);
 
-//  catálogo 
-function agregarProductoCatalogo({ name, id, type, price, stock, description }) {
-  if (productos.some((prod) => prod.id === id)) return;
-  const productoNuevo = new Producto(name, id, type, price, stock, description);
-  productos.push(productoNuevo);
-  guardarEnStorage("productos", productos);
+// utilidades
+function mostrarToast(texto) {
+  Toastify({
+    text: texto,
+    duration: 2000,
+    gravity: "top",
+    position: "right"
+  }).showToast();
 }
 
-function cargarProductosPreexistentes() {
-  if (productos.length > 0) return;
-  for (const prod of productosBase) {
-    const copia = JSON.parse(JSON.stringify(prod));
-    agregarProductoCatalogo(copia);
-  }
-}
-
-//  Carrito funcionando suma y resta 
 function obtenerItemCarrito(id) {
   return carrito.find((p) => p.id === id);
 }
@@ -79,6 +56,37 @@ function guardarCarrito() {
   renderTotalCarrito();
 }
 
+// fetch de productos
+async function cargarProductos() {
+  try {
+    const response = await fetch("./data/productos.json");
+
+    if (!response.ok) {
+      throw new Error("No se pudieron cargar los productos");
+    }
+
+    const data = await response.json();
+    productos = data.map(
+      (prod) =>
+        new Producto(
+          prod.name,
+          prod.id,
+          prod.type,
+          prod.price,
+          prod.stock,
+          prod.description
+        )
+    );
+
+    guardarEnStorage("productos", productos);
+    renderizarProductos(productos);
+  } catch (error) {
+    setMensaje("Hubo un problema al cargar los productos.");
+    console.error(error);
+  }
+}
+
+// carrito
 function agregarAlCarrito(producto, cantidadIngresada) {
   const cantidad = Number(cantidadIngresada);
 
@@ -103,6 +111,7 @@ function agregarAlCarrito(producto, cantidadIngresada) {
   }
 
   setMensaje("Producto agregado al carrito.");
+  mostrarToast("Producto agregado al carrito");
   guardarCarrito();
   renderizarCarrito();
 }
@@ -129,14 +138,31 @@ function eliminarProducto(idProducto) {
   renderizarCarrito();
 }
 
-function vaciarCarrito() {
+async function vaciarCarrito() {
+  if (carrito.length === 0) {
+    setMensaje("El carrito ya está vacío.");
+    return;
+  }
+
+  const resultado = await Swal.fire({
+    title: "¿Vaciar carrito?",
+    text: "Se eliminarán todos los productos.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, vaciar",
+    cancelButtonText: "Cancelar"
+  });
+
+  if (!resultado.isConfirmed) return;
+
   carrito = [];
   setMensaje("Carrito vacío.");
   guardarCarrito();
   renderizarCarrito();
+  mostrarToast("Carrito vaciado");
 }
 
-//  Render del carrito 
+// render carrito
 function renderizarCarrito() {
   const listaCarrito = document.getElementById("listaCarrito");
   listaCarrito.innerHTML = "";
@@ -172,6 +198,7 @@ function renderizarCarrito() {
 
     btnMenos.addEventListener("click", () => restarUnidad(item.id));
     btnEliminar.addEventListener("click", () => eliminarProducto(item.id));
+
     btnMas.addEventListener("click", () => {
       const prodCatalogo = productos.find((p) => p.id === item.id);
       if (!prodCatalogo) return;
@@ -180,6 +207,7 @@ function renderizarCarrito() {
         setMensaje(`Stock insuficiente. Disponible: ${prodCatalogo.stock}.`);
         return;
       }
+
       item.quantity += 1;
       setMensaje("Producto actualizado.");
       guardarCarrito();
@@ -192,7 +220,7 @@ function renderizarCarrito() {
   renderTotalCarrito();
 }
 
-//  Render de productos 
+// render productos
 function renderizarProductos(arrayUtilizado) {
   const contenedorProductos = document.getElementById("contenedorProductos");
   contenedorProductos.innerHTML = "";
@@ -208,8 +236,9 @@ function renderizarProductos(arrayUtilizado) {
     card.id = id;
 
     const imgSrc = `./assets/${name + id}.png`;
+
     card.innerHTML = `
-      <img src="${imgSrc}" class="card-img-top" alt="${name}" onerror="this.src='./assets/fallback.png'">
+      <img src="${imgSrc}" class="card-img-top" alt="${name}">
       <div class="card-body">
         <h5 class="card-title">${name}</h5>
         <div class="producto-meta">${type}</div>
@@ -232,6 +261,11 @@ function renderizarProductos(arrayUtilizado) {
     cardCol.appendChild(card);
     contenedorProductos.appendChild(cardCol);
 
+    const imagen = card.querySelector("img");
+    imagen.addEventListener("error", () => {
+      imagen.src = "./assets/fallback.png";
+    });
+
     const form = document.getElementById(`form${id}`);
     form.addEventListener("submit", (evento) => {
       evento.preventDefault();
@@ -242,8 +276,8 @@ function renderizarProductos(arrayUtilizado) {
   }
 }
 
-// Finalizar compra 
-function finalizarCompra(event) {
+// finalizar compra
+async function finalizarCompra(event) {
   event.preventDefault();
 
   if (carrito.length === 0) {
@@ -259,20 +293,30 @@ function finalizarCompra(event) {
     total: totalCarrito(),
     id: pedidos.length + 1,
     productos: carrito,
-    fecha: new Date().toISOString(),
+    fecha: new Date().toISOString()
   };
 
   pedidos.push(ticket);
   guardarEnStorage("pedidos", pedidos);
 
-  vaciarCarrito();
+  carrito = [];
+  guardarCarrito();
+  renderizarCarrito();
   event.target.reset();
+
+  await Swal.fire({
+    title: "Compra realizada",
+    text: `Gracias por tu compra. Total: $ ${ticket.total}`,
+    icon: "success",
+    confirmButtonText: "Aceptar"
+  });
 
   const carritoTotal = document.getElementById("carritoTotal");
   carritoTotal.textContent = "Muchas gracias por su compra, los esperamos pronto.";
+  setMensaje("");
 }
 
-//  UI 
+// ui
 function configurarEventosUI() {
   const compraFinal = document.getElementById("formCompraFinal");
   compraFinal.addEventListener("submit", finalizarCompra);
@@ -280,6 +324,7 @@ function configurarEventosUI() {
   const selectorTipo = document.getElementById("tipoProducto");
   selectorTipo.addEventListener("change", (evt) => {
     const tipoSeleccionado = evt.target.value;
+
     if (tipoSeleccionado === "0") {
       renderizarProductos(productos);
     } else {
@@ -291,15 +336,13 @@ function configurarEventosUI() {
   btnVaciar.addEventListener("click", vaciarCarrito);
 }
 
-//  App 
-function app() {
-  cargarProductosPreexistentes();
+// app
+async function app() {
   configurarEventosUI();
-  renderizarProductos(productos);
+  await cargarProductos();
   renderizarCarrito();
   renderTotalCarrito();
   setMensaje("");
 }
 
-// Ejecutar
 app();
